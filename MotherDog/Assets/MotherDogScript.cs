@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class MotherDogScript : MonoBehaviour, iDog
     int SPEED;
     Vector3 right_face = new Vector3(0f, 90f, 0f);
     Vector3 left_face = new Vector3(0f, 270f, 0f);
+
+    Camera cam;
 
     public MotherDogScript()
     {
@@ -22,11 +25,11 @@ public class MotherDogScript : MonoBehaviour, iDog
         {
             if (transform.eulerAngles.y > 270f || transform.eulerAngles.y < 90f)
             {
-                transform.eulerAngles += new Vector3(0f,  0.5f, 0f);
+                transform.eulerAngles += new Vector3(0f,  5f, 0f);
             }
             else if (transform.eulerAngles.y < 270f || transform.eulerAngles.y > 90f)
             {
-                transform.eulerAngles += new Vector3(0f, -0.5f, 0f);
+                transform.eulerAngles += new Vector3(0f, -5f, 0f);
             }
             
             transform.position += new Vector3(Input.GetAxis("Horizontal") * SPEED * Time.deltaTime, 0, 0);
@@ -36,19 +39,51 @@ public class MotherDogScript : MonoBehaviour, iDog
         {
             if (transform.eulerAngles.y > 270f || transform.eulerAngles.y < 90f)
             {
-                transform.eulerAngles += new Vector3(0f, -0.5f, 0f);
+                transform.eulerAngles += new Vector3(0f, -5f, 0f);
             }
             else if (transform.eulerAngles.y < 270f || transform.eulerAngles.y > 90f)
             {
-                transform.eulerAngles += new Vector3(0f, 0.5f, 0f);
+                transform.eulerAngles += new Vector3(0f, 5f, 0f);
             }
 
             transform.position += new Vector3(Input.GetAxis("Horizontal") * SPEED * Time.deltaTime, 0, 0);
         }
-
-        if (Input.GetAxis("Vertical") != 0)
+        else if (transform.eulerAngles.y == 90f || transform.eulerAngles.y == 270f)
         {
-            transform.position += Input.GetAxis("Vertical") * transform.GetChild(1).GetComponent<Camera>().transform.forward * SPEED * Time.deltaTime;
+            //pass
+        }
+
+
+        if (Input.GetAxis("Vertical") > 0)
+        {
+            if (transform.eulerAngles.y > 0f || transform.eulerAngles.y < 180f)
+            {
+                transform.eulerAngles += new Vector3(0f, 5f, 0f);
+            }
+            else if (transform.eulerAngles.y < 0f || transform.eulerAngles.y > 180f)
+            {
+                transform.eulerAngles += new Vector3(0f, -5f, 0f);
+            }
+
+            transform.position += Input.GetAxis("Vertical") * new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z) * SPEED * Time.deltaTime;
+
+        }
+        else if (Input.GetAxis("Vertical") < 0)
+        {
+            if (transform.eulerAngles.y > 0f || transform.eulerAngles.y < 180f)
+            {
+                transform.eulerAngles += new Vector3(0f, -5f, 0f);
+            }
+            else if (transform.eulerAngles.y < 0f || transform.eulerAngles.y > 180f)
+            {
+                transform.eulerAngles += new Vector3(0f, 5f, 0f);
+            }
+
+            transform.position += Input.GetAxis("Vertical") * new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z) * SPEED * Time.deltaTime;
+        }
+        else if (transform.eulerAngles.y == 0f || transform.eulerAngles.y == 180f)
+        {
+            Debug.Log(transform.eulerAngles.y);
         }
     }
     
@@ -65,11 +100,11 @@ public class MotherDogScript : MonoBehaviour, iDog
     // Start is called before the first frame update
     void Start()
     {
-        
+        cam = GameObject.Find("Camera").GetComponent<Camera>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Movement();
     }
