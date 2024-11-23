@@ -6,84 +6,39 @@ using UnityEngine;
 
 public class MotherDogScript : MonoBehaviour, iDog
 {
-    int SPEED;
-    Vector3 right_face = new Vector3(0f, 90f, 0f);
-    Vector3 left_face = new Vector3(0f, 270f, 0f);
+    [SerializeField] int MOVE_SPEED = 20;
+    [SerializeField] int ROTATE_SPEED = 5;
+
 
     Camera cam;
-
-    public MotherDogScript()
-    {
-        SPEED = 20;
-    }
-    
-    
-    
+ 
     public void Movement()
     {
-        if (Input.GetAxis("Horizontal") > 0)
+        //Local variables
+        Vector3 relative_forward = new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z);
+        Vector3 relative_right = new Vector3(cam.transform.right.x, 0f, cam.transform.right.z);
+        Quaternion RotateTo = Quaternion.identity;
+       
+        // Rotate & Move player along x-axis relative to camera-facing direction
+        if (Input.GetAxis("Horizontal") != 0)
+        {     
+            //Rotate
+            RotateTo = Quaternion.LookRotation(Input.GetAxis("Horizontal") * relative_right);
+            transform.rotation = Quaternion.Slerp(transform.rotation, RotateTo, Time.deltaTime * ROTATE_SPEED);
+
+            //Move
+            transform.position += Input.GetAxis("Horizontal") * new Vector3(cam.transform.right.x, 0f, cam.transform.right.z) * MOVE_SPEED * Time.deltaTime;
+        }
+
+        // Rotate & Move player along z-axis relative to camera-facing direction
+        if (Input.GetAxis("Vertical") != 0)
         {
-            if (transform.eulerAngles.y > 270f || transform.eulerAngles.y < 90f)
-            {
-                transform.eulerAngles += new Vector3(0f,  5f, 0f);
-            }
-            else if (transform.eulerAngles.y < 270f || transform.eulerAngles.y > 90f)
-            {
-                transform.eulerAngles += new Vector3(0f, -5f, 0f);
-            }
+            //Rotate
+            RotateTo = Quaternion.LookRotation(Input.GetAxis("Vertical") * relative_forward);
+            transform.rotation = Quaternion.Slerp(transform.rotation, RotateTo, Time.deltaTime * ROTATE_SPEED);
             
-            transform.position += new Vector3(Input.GetAxis("Horizontal") * SPEED * Time.deltaTime, 0, 0);
-
-        }
-        else if (Input.GetAxis("Horizontal") < 0)
-        {
-            if (transform.eulerAngles.y > 270f || transform.eulerAngles.y < 90f)
-            {
-                transform.eulerAngles += new Vector3(0f, -5f, 0f);
-            }
-            else if (transform.eulerAngles.y < 270f || transform.eulerAngles.y > 90f)
-            {
-                transform.eulerAngles += new Vector3(0f, 5f, 0f);
-            }
-
-            transform.position += new Vector3(Input.GetAxis("Horizontal") * SPEED * Time.deltaTime, 0, 0);
-        }
-        else if (transform.eulerAngles.y == 90f || transform.eulerAngles.y == 270f)
-        {
-            //pass
-        }
-
-
-        if (Input.GetAxis("Vertical") > 0)
-        {
-            if (transform.eulerAngles.y > 0f || transform.eulerAngles.y < 180f)
-            {
-                transform.eulerAngles += new Vector3(0f, 5f, 0f);
-            }
-            else if (transform.eulerAngles.y < 0f || transform.eulerAngles.y > 180f)
-            {
-                transform.eulerAngles += new Vector3(0f, -5f, 0f);
-            }
-
-            transform.position += Input.GetAxis("Vertical") * new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z) * SPEED * Time.deltaTime;
-
-        }
-        else if (Input.GetAxis("Vertical") < 0)
-        {
-            if (transform.eulerAngles.y > 0f || transform.eulerAngles.y < 180f)
-            {
-                transform.eulerAngles += new Vector3(0f, -5f, 0f);
-            }
-            else if (transform.eulerAngles.y < 0f || transform.eulerAngles.y > 180f)
-            {
-                transform.eulerAngles += new Vector3(0f, 5f, 0f);
-            }
-
-            transform.position += Input.GetAxis("Vertical") * new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z) * SPEED * Time.deltaTime;
-        }
-        else if (transform.eulerAngles.y == 0f || transform.eulerAngles.y == 180f)
-        {
-            Debug.Log(transform.eulerAngles.y);
+            //Move
+            transform.position += Input.GetAxis("Vertical") * new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z) * MOVE_SPEED * Time.deltaTime;
         }
     }
     
@@ -104,7 +59,7 @@ public class MotherDogScript : MonoBehaviour, iDog
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         Movement();
     }
