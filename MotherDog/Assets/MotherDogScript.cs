@@ -9,11 +9,16 @@ public class MotherDogScript : MonoBehaviour, iDog
     [SerializeField] int MOVE_SPEED = 20;
     [SerializeField] int ROTATE_SPEED = 5;
 
+    //public delegate void Function();
+    //Function function;
+    //public static int num = 9;
+   //public static int Func() { Debug.Log(num); return num; }
 
     Camera cam;
  
+
     public void Movement()
-    {
+    { 
         //Local variables
         Vector3 relative_forward = new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z);
         Vector3 relative_right = new Vector3(cam.transform.right.x, 0f, cam.transform.right.z);
@@ -56,6 +61,8 @@ public class MotherDogScript : MonoBehaviour, iDog
     void Start()
     {
         cam = GameObject.Find("Camera").GetComponent<Camera>();
+        //function += Func;
+        //function_global += Func;
     }
 
     // Update is called once per frame
