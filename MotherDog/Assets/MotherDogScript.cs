@@ -49,12 +49,25 @@ public class MotherDogScript : MonoBehaviour, iDog
     
     public void Call()
     {
-        Debug.Log("call command");
+        iDog.Broadcast();
+        Debug.Log("Sent");
     }
 
     public void Respond()
     {
-        Debug.Log("respond command");
+        Debug.Log("Respond command Mother");
+    }
+
+    public void HandleComms(bool enable)
+    {
+        if (enable == true)
+        {
+            iDog.Recieve += Respond;
+        }
+        else
+        {
+            iDog.Recieve -= Respond;
+        }
     }
     
     // Start is called before the first frame update
@@ -63,6 +76,8 @@ public class MotherDogScript : MonoBehaviour, iDog
         cam = GameObject.Find("Camera").GetComponent<Camera>();
         //function += Func;
         //function_global += Func;
+        HandleComms(true);
+        Call();
     }
 
     // Update is called once per frame
