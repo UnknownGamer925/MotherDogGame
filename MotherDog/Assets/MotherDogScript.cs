@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class MotherDogScript : MonoBehaviour, iDog
+public class MotherDogScript : Dog, iDog
 {
     [SerializeField] int MOVE_SPEED = 20;
     [SerializeField] int ROTATE_SPEED = 5;
@@ -15,9 +16,10 @@ public class MotherDogScript : MonoBehaviour, iDog
    //public static int Func() { Debug.Log(num); return num; }
 
     Camera cam;
+    Recieve rec;
  
 
-    public void Movement()
+    public override void Movement()
     { 
         //Local variables
         Vector3 relative_forward = new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z);
@@ -47,9 +49,10 @@ public class MotherDogScript : MonoBehaviour, iDog
         }
     }
     
-    public void Call()
+    public override void Call()
     {
-        iDog.Broadcast();
+        //Dog.Broadcast();
+        rec?.Invoke();
         Debug.Log("Sent");
     }
 
@@ -58,15 +61,15 @@ public class MotherDogScript : MonoBehaviour, iDog
         Debug.Log("Respond command Mother");
     }
 
-    public void HandleComms(bool enable)
+    public override void HandleComms(bool enable)
     {
         if (enable == true)
         {
-            iDog.Recieve += Respond;
+            //Dog.Recieve += Respond;
         }
         else
         {
-            iDog.Recieve -= Respond;
+            //Dog.Recieve -= Respond;
         }
     }
     
@@ -76,13 +79,17 @@ public class MotherDogScript : MonoBehaviour, iDog
         cam = GameObject.Find("Camera").GetComponent<Camera>();
         //function += Func;
         //function_global += Func;
-        HandleComms(true);
+        //HandleComms(true);
+        rec = Respond;
         Call();
     }
+    
 
     // Update is called once per frame
     void Update()
     {
         Movement();
     }
+
+
 }

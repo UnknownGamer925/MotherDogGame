@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
-public class PuppyScript : MonoBehaviour, iDog
+public class PuppyScript : Dog, iDog
 {
     private NavMeshAgent agent;
     
-    public void Movement()
+    public override void Movement()
     {
         
     }
 
-    public void Call()
+    public override void Call()
     {
         Debug.Log("Call");
     }
@@ -24,15 +25,15 @@ public class PuppyScript : MonoBehaviour, iDog
     }
 
 
-    public void HandleComms(bool enable)
+    public override void HandleComms(bool enable)
     {
         if (enable == true)
         {
-            iDog.Recieve += Respond;
+            //.Recieve += Respond;
         }
         else
         {
-            iDog.Recieve -= Respond;
+            //Dog.Recieve -= Respond;
         }
     }
     
@@ -42,7 +43,8 @@ public class PuppyScript : MonoBehaviour, iDog
         //int var = MotherDogScript.Func();
         //Debug.Log(var);
         //Debug.Log(MotherDogScript.num);
-        HandleComms(true);
+        //HandleComms(true);
+        Recieve rec = Respond;
     }
 
     // Update is called once per frame

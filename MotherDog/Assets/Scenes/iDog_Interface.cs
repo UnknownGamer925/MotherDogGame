@@ -9,7 +9,18 @@ public interface iDog
     void Movement();
     void HandleComms(bool enable);
     void Call();
-    void Respond();
-    static event UnityAction Recieve;
-    public static void Broadcast() => Recieve?.Invoke();
+    
+    
+}
+
+public abstract class Dog : MonoBehaviour, iDog
+{
+    public abstract void Movement();
+    public abstract void HandleComms(bool enable);
+    public abstract void Call();
+    public delegate void Recieve();
+
+
+    //public static event UnityAction Recieve;
+    //public static void Broadcast() => Recieve?.Invoke();
 }
