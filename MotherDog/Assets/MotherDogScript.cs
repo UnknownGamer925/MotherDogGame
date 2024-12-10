@@ -5,7 +5,7 @@ using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MotherDogScript : Dog, iDog
+public class MotherDogScript : MonoBehaviour, iDog
 {
     [SerializeField] int MOVE_SPEED = 20;
     [SerializeField] int ROTATE_SPEED = 5;
@@ -16,10 +16,9 @@ public class MotherDogScript : Dog, iDog
    //public static int Func() { Debug.Log(num); return num; }
 
     Camera cam;
-    Recieve rec;
  
 
-    public override void Movement()
+    public void Movement()
     { 
         //Local variables
         Vector3 relative_forward = new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z);
@@ -48,24 +47,16 @@ public class MotherDogScript : Dog, iDog
             transform.position += Input.GetAxis("Vertical") * new Vector3(cam.transform.forward.x, 0f, cam.transform.forward.z) * MOVE_SPEED * Time.deltaTime;
         }
     }
-    
-    public override void Call()
-    {
-        //Dog.Broadcast();
-        rec?.Invoke();
-        Debug.Log("Sent");
-    }
 
-    public void Respond()
-    {
-        Debug.Log("Respond command Mother");
-    }
+    public delegate void PuppyCheckDelegate();
+    public event PuppyCheckDelegate PuppyCheck;
 
-    public override void HandleComms(bool enable)
+    public void HandleComms(bool enable)
     {
         if (enable == true)
         {
             //Dog.Recieve += Respond;
+
         }
         else
         {
@@ -80,8 +71,7 @@ public class MotherDogScript : Dog, iDog
         //function += Func;
         //function_global += Func;
         //HandleComms(true);
-        rec = Respond;
-        Call();
+        
     }
     
 
@@ -89,6 +79,10 @@ public class MotherDogScript : Dog, iDog
     void Update()
     {
         Movement();
+        if (PuppyCheck != null)
+        {
+            PuppyCheck();
+        }
     }
 
 
