@@ -8,7 +8,5 @@ public interface iDog
 {
     void Movement();
     void HandleComms(bool enable);
-    //public delegate void PuppyCheckDelegate();
-    
-    
+    void Respond();
 }

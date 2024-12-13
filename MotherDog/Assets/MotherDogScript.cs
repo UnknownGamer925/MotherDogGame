@@ -9,14 +9,14 @@ public class MotherDogScript : MonoBehaviour, iDog
 {
     [SerializeField] int MOVE_SPEED = 20;
     [SerializeField] int ROTATE_SPEED = 5;
-
-    //public delegate void Function();
-    //Function function;
-    //public static int num = 9;
-   //public static int Func() { Debug.Log(num); return num; }
+    private float cooldown = 0;
 
     Camera cam;
- 
+
+    // Observer pattern
+    public delegate void PuppyCheckDelegate();
+    public event PuppyCheckDelegate PuppyCheck;
+
 
     public void Movement()
     { 
@@ -48,41 +48,52 @@ public class MotherDogScript : MonoBehaviour, iDog
         }
     }
 
-    public delegate void PuppyCheckDelegate();
-    public event PuppyCheckDelegate PuppyCheck;
 
     public void HandleComms(bool enable)
     {
-        if (enable == true)
+        if (PuppyCheck != null && cooldown <= 0)
         {
-            //Dog.Recieve += Respond;
-
+            PuppyCheck();
+            cooldown = 5f;
+        }
+        else if (cooldown > 0)
+        {
+            Debug.Log("-----COOLDOWN ACTIVE-----");
         }
         else
         {
-            //Dog.Recieve -= Respond;
+            Debug.Log("-----NO NEARBY PUPS-----");
         }
     }
+
+    public void Respond() { }
     
     // Start is called before the first frame update
     void Start()
     {
         cam = GameObject.Find("Camera").GetComponent<Camera>();
-        //function += Func;
-        //function_global += Func;
-        //HandleComms(true);
         
     }
-    
 
     // Update is called once per frame
     void Update()
     {
         Movement();
-        if (PuppyCheck != null)
+
+        if (cooldown > 0)
         {
-            PuppyCheck();
+            cooldown -= Time.deltaTime;
         }
+        else
+        {
+            cooldown = 0;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            HandleComms(true);
+        }
+        
     }
 
 
