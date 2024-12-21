@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,17 +11,18 @@ public class PuppyScript: MonoBehaviour, iDog
     private NavMeshAgent agent;
     private MotherDogScript mother;
     [SerializeField] int maxDistance;
+    Vector3 random_point;
 
-    
 
     public void Movement()
     {
-        Vector3 random_point = Random.insideUnitSphere * maxDistance;
-
-        random_point += transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(random_point, out hit, maxDistance, 1);
-        Vector3 final_position = hit.position;
+        if (transform.position == random_point)
+        {
+            random_point = ReturnPoint();
+        }
+        transform.position += random_point;
+        Debug.Log(transform.position);
+        
     }
 
     public void HandleComms(bool enable)
@@ -40,11 +42,22 @@ public class PuppyScript: MonoBehaviour, iDog
     {
         Debug.Log("Puppy Respond");
     }
+
+    private Vector3 ReturnPoint()
+    {
+        Vector3 point = Random.insideUnitSphere * maxDistance;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(point, out hit, maxDistance, 1);
+        Vector3 final_position = hit.position;
+
+        return final_position;
+    }
     
     // Start is called before the first frame update
     void Start()
     {
         mother = FindObjectOfType<MotherDogScript>();
+        random_point = ReturnPoint();
         
     }
 
