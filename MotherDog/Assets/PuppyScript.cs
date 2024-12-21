@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 public class PuppyScript: MonoBehaviour, iDog
 {
+    public int id;
     private NavMeshAgent agent;
     private MotherDogScript mother;
     [SerializeField] int maxDistance;
@@ -16,12 +17,13 @@ public class PuppyScript: MonoBehaviour, iDog
 
     public void Movement()
     {
-        if (transform.position == random_point)
+        if (agent.remainingDistance <= agent.stoppingDistance || agent.pathStatus == NavMeshPathStatus.PathInvalid)
         {
             random_point = ReturnPoint();
+            Debug.Log("REROLL");
         }
-        transform.position += random_point;
-        Debug.Log(transform.position);
+        agent.SetDestination(random_point);
+
         
     }
 
@@ -57,6 +59,8 @@ public class PuppyScript: MonoBehaviour, iDog
     void Start()
     {
         mother = FindObjectOfType<MotherDogScript>();
+        agent = this.gameObject.GetComponent<NavMeshAgent>();
+        transform.position = ReturnPoint();
         random_point = ReturnPoint();
         
     }
@@ -64,12 +68,13 @@ public class PuppyScript: MonoBehaviour, iDog
     // Update is called once per frame
     void Update()
     {
+        
         Movement();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && mother != null)
         {
             HandleComms(true);
         }
@@ -77,9 +82,14 @@ public class PuppyScript: MonoBehaviour, iDog
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && mother != null)
         {
             HandleComms(false);
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+       random_point = ReturnPoint();
     }
 }

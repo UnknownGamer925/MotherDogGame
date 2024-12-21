@@ -359,6 +359,7 @@
 "Assets/CameraScript.cs"
 "Assets/MotherDogScript.cs"
 "Assets/PuppyScript.cs"
+"Assets/PuppySpawnScript.cs"
 "Assets/Scenes/iDog_Interface.cs"
 -langversion:9.0
 /deterministic
