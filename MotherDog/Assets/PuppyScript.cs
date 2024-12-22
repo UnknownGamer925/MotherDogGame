@@ -11,9 +11,11 @@ public class PuppyScript: MonoBehaviour, iDog
     public int id;
     private NavMeshAgent agent;
     private MotherDogScript mother;
+    private Animator animator;
     [SerializeField] int maxDistance;
     Vector3 random_point;
-
+    private float cooldown = 0;
+    private bool barkstate = true;
 
     public void Movement()
     {
@@ -29,7 +31,7 @@ public class PuppyScript: MonoBehaviour, iDog
 
     public void HandleComms(bool enable)
     {
-        if (enable == true)
+        if (enable == true && id == 0)
         {
             mother.PuppyCheck += Respond;
 
@@ -59,8 +61,9 @@ public class PuppyScript: MonoBehaviour, iDog
     // Start is called before the first frame update
     void Start()
     {
-        mother = FindObjectOfType<MotherDogScript>();
+        mother = FindObjectOfType<MotherDogScript>(); // <-- initialised in Start
         agent = this.gameObject.GetComponent<NavMeshAgent>();
+        animator = transform.GetChild(0).GetComponent<Animator>();
         
     }
 
@@ -70,11 +73,29 @@ public class PuppyScript: MonoBehaviour, iDog
         
         Movement();
 
-        if (Input.GetKeyDown(KeyCode.E))
+
+        if (cooldown <= 0)
         {
-            Debug.Log("Destination: " + agent.remainingDistance);
-            Debug.Log("Current: " + agent.stoppingDistance);
+            if (barkstate == true)
+            {
+                animator.SetBool("Barking", false);
+                cooldown = Random.Range(3, 10);
+                barkstate = false;
+            }
+            else
+            {
+                animator.SetBool("Barking", true);
+                cooldown = Random.Range(2, 5);
+                barkstate = true;
+            }
         }
+        else
+        {
+            cooldown -= Time.deltaTime;
+        }
+
+
+        
     }
 
     private void OnTriggerEnter(Collider other)

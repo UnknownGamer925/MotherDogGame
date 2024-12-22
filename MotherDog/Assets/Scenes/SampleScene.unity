@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnEntity: {fileID: 4479057715988834291, guid: 25df41816a6531a4b9e6965d4596d822, type: 3}
+  total_pups: 10
+  good_pups: 5
 --- !u!4 &208647144
 Transform:
   m_ObjectHideFlags: 0

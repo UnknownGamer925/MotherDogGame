@@ -6,6 +6,8 @@ using UnityEngine.AI;
 public class PuppySpawnScript : MonoBehaviour
 {
     [SerializeField] GameObject spawnEntity;
+    [SerializeField] int total_pups = 10;
+    [SerializeField] int good_pups = 5;
 
     private Vector3 ReturnPoint()
     {
@@ -21,26 +23,27 @@ public class PuppySpawnScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int good_pups = 0;
-        int _id;
-        for (int i = 0; i < 10; i++)
+        if (good_pups >= total_pups)
         {
-            if (good_pups < 5)
+            good_pups = total_pups / 2;
+        }
+        
+        
+        int _id;
+        for (int i = 0; i < total_pups; i++)
+        {
+            if (i <= good_pups)
             {
-                _id = Random.Range(0, 2);
-                if (_id == 1)
-                {
-                    good_pups++;
-                }
+                _id = 0;
             }
             else
             {
                 _id = 1;
             }
+            
             Vector3 spawnpoint = ReturnPoint();
             GameObject pup = Instantiate(spawnEntity, spawnpoint, Quaternion.identity, transform);
             pup.GetComponent<PuppyScript>().id = _id;
-            Debug.Log(_id);
         }
     }
 
