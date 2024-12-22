@@ -301,7 +301,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 072327def36b3ad41815519c14dceac3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -340,8 +340,8 @@ Transform:
   m_GameObject: {fileID: 818516147}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.14587688, y: 0.45934415, z: 0.6}
-  m_LocalScale: {x: 0.42548, y: 0.39403597, z: 0.9701795}
+  m_LocalPosition: {x: 0, y: 0.421, z: 0.43}
+  m_LocalScale: {x: 0.47988418, y: 0.24079144, z: 0.8241138}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 963569564}
@@ -823,10 +823,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f8cfd80bfc31be4d86640b8617933a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  min_pitch: -360
-  max_pitch: 360
-  min_yaw: -360
-  max_yaw: 360
+  min_pitch: -359
+  max_pitch: 359
+  min_yaw: -359
+  max_yaw: 359
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
