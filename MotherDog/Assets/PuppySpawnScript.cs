@@ -1,11 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PuppySpawnScript : MonoBehaviour
 {
     [SerializeField] GameObject spawnEntity;
-    
+
+    private Vector3 ReturnPoint()
+    {
+        Vector3 point = Random.insideUnitSphere * 15;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(point, out hit, 15, 1);
+        Vector3 final_position = hit.position;
+        final_position.y = 2.6f;
+
+        return final_position;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +37,8 @@ public class PuppySpawnScript : MonoBehaviour
             {
                 _id = 1;
             }
-            GameObject pup = Instantiate(spawnEntity);
+            Vector3 spawnpoint = ReturnPoint();
+            GameObject pup = Instantiate(spawnEntity, spawnpoint, Quaternion.identity, transform);
             pup.GetComponent<PuppyScript>().id = _id;
             Debug.Log(_id);
         }

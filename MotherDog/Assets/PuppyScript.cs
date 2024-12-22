@@ -17,11 +17,11 @@ public class PuppyScript: MonoBehaviour, iDog
 
     public void Movement()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance || agent.pathStatus == NavMeshPathStatus.PathInvalid)
+        if (agent.remainingDistance <= 1 || agent.pathStatus == NavMeshPathStatus.PathInvalid)
         {
             random_point = ReturnPoint();
-            Debug.Log("REROLL");
         }
+
         agent.SetDestination(random_point);
 
         
@@ -42,7 +42,7 @@ public class PuppyScript: MonoBehaviour, iDog
 
     public void Respond() 
     {
-        Debug.Log("Puppy Respond");
+        Debug.Log("Puppy Code: " + id);
     }
 
     private Vector3 ReturnPoint()
@@ -51,6 +51,7 @@ public class PuppyScript: MonoBehaviour, iDog
         NavMeshHit hit;
         NavMesh.SamplePosition(point, out hit, maxDistance, 1);
         Vector3 final_position = hit.position;
+        final_position.y = 2.6f;
 
         return final_position;
     }
@@ -60,8 +61,6 @@ public class PuppyScript: MonoBehaviour, iDog
     {
         mother = FindObjectOfType<MotherDogScript>();
         agent = this.gameObject.GetComponent<NavMeshAgent>();
-        transform.position = ReturnPoint();
-        random_point = ReturnPoint();
         
     }
 
@@ -70,6 +69,12 @@ public class PuppyScript: MonoBehaviour, iDog
     {
         
         Movement();
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("Destination: " + agent.remainingDistance);
+            Debug.Log("Current: " + agent.stoppingDistance);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

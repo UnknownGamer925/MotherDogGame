@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  maxDistance: 15
+  maxDistance: 30
 --- !u!195 &8822906924541545070
 NavMeshAgent:
   m_ObjectHideFlags: 0
