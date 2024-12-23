@@ -8,5 +8,5 @@ public interface iDog
 {
     void Movement();
     void HandleComms(bool enable);
-    void Respond();
+    void Pickup(bool enable);
 }

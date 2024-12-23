@@ -15,7 +15,15 @@ public class PuppyScript: MonoBehaviour, iDog
     [SerializeField] int maxDistance;
     Vector3 random_point;
     private float cooldown = 0;
-    private bool barkstate = true;
+
+
+    public enum State
+    {
+        Barking,
+        Quiet,
+        Held,
+    }
+    public State state;
 
     public void Movement()
     {
@@ -42,9 +50,27 @@ public class PuppyScript: MonoBehaviour, iDog
         }
     }
 
-    public void Respond() 
+    public void Respond(int v) 
     {
-        Debug.Log("Puppy Code: " + id);
+        Debug.Log("Puppy Code: " + v);
+    }
+
+    public void Pickup(bool enable)
+    {
+        if (enable == true)
+        {
+            state = State.Held;
+            GetComponent<Rigidbody>().isKinematic = true;
+            agent.updatePosition = false;
+            animator.SetBool("Barking", false);
+        }
+        else
+        {
+            state = State.Quiet;
+            GetComponent<Rigidbody>().isKinematic = false;
+            agent.updatePosition = true;
+        }
+        
     }
 
     private Vector3 ReturnPoint()
@@ -70,30 +96,34 @@ public class PuppyScript: MonoBehaviour, iDog
     // Update is called once per frame
     void Update()
     {
-        
-        Movement();
-
-
-        if (cooldown <= 0)
+        if (state != State.Held)
         {
-            if (barkstate == true)
+            Movement();
+            Debug.Log(state);
+
+            if (cooldown <= 0)
             {
-                animator.SetBool("Barking", false);
-                cooldown = Random.Range(3, 10);
-                barkstate = false;
+                if (state == State.Quiet)
+                {
+                    animator.SetBool("Barking", false);
+                    cooldown = Random.Range(3, 10);
+                    state = State.Barking;
+                }
+                else
+                {
+                    animator.SetBool("Barking", true);
+                    cooldown = Random.Range(2, 5);
+                    state = State.Quiet;
+                }
             }
             else
             {
-                animator.SetBool("Barking", true);
-                cooldown = Random.Range(2, 5);
-                barkstate = true;
+                cooldown -= Time.deltaTime;
             }
         }
-        else
-        {
-            cooldown -= Time.deltaTime;
-        }
-
+        
+        
+        
 
         
     }

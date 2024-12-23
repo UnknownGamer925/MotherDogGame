@@ -1,20 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class MotherDogScript : MonoBehaviour, iDog
 {
     [SerializeField] int MOVE_SPEED = 20;
     [SerializeField] int ROTATE_SPEED = 5;
     private float cooldown = 0;
+    private List<GameObject> pickup_list = new List<GameObject>();
+    private bool pickedup = false;
 
     Camera cam;
 
     // Observer pattern
-    public delegate void PuppyCheckDelegate();
+    public delegate void PuppyCheckDelegate(int x);
     public event PuppyCheckDelegate PuppyCheck;
 
 
@@ -53,7 +53,7 @@ public class MotherDogScript : MonoBehaviour, iDog
     {
         if (PuppyCheck != null && cooldown <= 0)
         {
-            PuppyCheck();
+            PuppyCheck(2);
             cooldown = 5f;
         }
         else if (cooldown > 0)
@@ -66,7 +66,31 @@ public class MotherDogScript : MonoBehaviour, iDog
         }
     }
 
-    public void Respond() { }
+    public void Pickup(bool enable) 
+    {
+        if (pickup_list != null && enable == true)
+        {
+            pickup_list[0].GetComponent<PuppyScript>().Pickup(true);
+            pickup_list[0].transform.parent = transform;
+            pickup_list[0].transform.position = transform.position + transform.forward + new Vector3 (0, 0.5f, 0.5f);
+        }
+        else if (pickup_list != null && enable == false)
+        {
+            GameObject spawner = GameObject.Find("PuppySpawner");
+            pickup_list[0].GetComponent<PuppyScript>().Pickup(false);
+            if (spawner != null)
+            {
+                pickup_list[0].transform.parent = spawner.transform;
+            }
+            else
+            {
+                pickup_list[0].transform.parent = null;
+            }
+            
+
+        }
+
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -93,8 +117,37 @@ public class MotherDogScript : MonoBehaviour, iDog
         {
             HandleComms(true);
         }
+
+        if (Input.GetKeyDown(KeyCode.E)) 
+        {
+            if (pickedup == false)
+            {
+                Pickup(true);
+                pickedup = true;
+            }
+            else
+            {
+                Pickup(false);
+                pickedup = false;
+            }
+
+        }
         
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag ==  "Puppy")
+        {
+            pickup_list.Add(other.gameObject);
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Puppy")
+        {
+            pickup_list.Remove(other.gameObject);
+        }
+    }
 }
