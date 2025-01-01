@@ -7,15 +7,29 @@ public class MotherDogScript : MonoBehaviour, iDog
 {
     [SerializeField] int MOVE_SPEED = 20;
     [SerializeField] int ROTATE_SPEED = 5;
+
     private float cooldown = 0;
     private List<GameObject> pickup_list = new List<GameObject>();
     private bool pickedup = false;
+
+    [SerializeField] private GameObject puppyInMouth = null;
+    //private Animator animator;
 
     Camera cam;
 
     // Observer pattern
     public delegate void PuppyCheckDelegate(int x);
     public event PuppyCheckDelegate PuppyCheck;
+
+    public delegate void DogbedCallDelegate(GameObject puppy);
+    public event DogbedCallDelegate DogbedCall;
+
+    public enum State
+    {
+        Empty,
+        Holding,
+    }
+    public State state;
 
 
     public void Movement()
@@ -68,35 +82,68 @@ public class MotherDogScript : MonoBehaviour, iDog
 
     public void Pickup(bool enable) 
     {
-        if (pickup_list != null && enable == true)
+        if (pickup_list != null && enable == true && pickup_list.Count > 0)
         {
-            pickup_list[0].GetComponent<PuppyScript>().Pickup(true);
-            pickup_list[0].transform.parent = transform;
-            pickup_list[0].transform.position = transform.position + transform.forward + new Vector3 (0, 0.5f, 0.5f);
+            puppyInMouth = pickup_list[0];
+            puppyInMouth.GetComponent<PuppyScript>().Pickup(true);
+            puppyInMouth.transform.parent = transform;
+            puppyInMouth.transform.position = transform.position + transform.forward + new Vector3 (0, 0.5f, 0.5f);
+            state = State.Holding;
         }
         else if (pickup_list != null && enable == false)
         {
             GameObject spawner = GameObject.Find("PuppySpawner");
-            pickup_list[0].GetComponent<PuppyScript>().Pickup(false);
+            puppyInMouth.GetComponent<PuppyScript>().Pickup(false);
             if (spawner != null)
             {
-                pickup_list[0].transform.parent = spawner.transform;
+                puppyInMouth.transform.parent = spawner.transform;
             }
             else
             {
-                pickup_list[0].transform.parent = null;
+                puppyInMouth.transform.parent = null;
             }
-            
-
+            pickup_list.Clear();
+            state = State.Empty;
+        }
+        else
+        {
+            Debug.Log("No dogs in sight");
+            state = State.Empty;
         }
 
+    }
+
+    private void Action()
+    {
+        if (state == State.Empty)
+        {
+
+            Pickup(true);
+        }
+        else if (state == State.Holding)
+        {
+            if (DogbedCall == null)
+            {
+                Pickup(false);
+            }
+            else
+            {
+                DogbedCall(puppyInMouth);
+                pickup_list.Clear();
+                state = State.Empty;
+            }
+            
+            
+        }
     }
     
     // Start is called before the first frame update
     void Start()
     {
         cam = GameObject.Find("Camera").GetComponent<Camera>();
-        
+        //animator = transform.GetChild(0).GetComponent<Animator>();
+        state = State.Empty;
+
     }
 
     // Update is called once per frame
@@ -120,17 +167,7 @@ public class MotherDogScript : MonoBehaviour, iDog
 
         if (Input.GetKeyDown(KeyCode.E)) 
         {
-            if (pickedup == false)
-            {
-                Pickup(true);
-                pickedup = true;
-            }
-            else
-            {
-                Pickup(false);
-                pickedup = false;
-            }
-
+            Action();
         }
         
     }
@@ -147,7 +184,7 @@ public class MotherDogScript : MonoBehaviour, iDog
     {
         if (other.tag == "Puppy")
         {
-            pickup_list.Remove(other.gameObject);
+            pickup_list.Clear();
         }
     }
 }

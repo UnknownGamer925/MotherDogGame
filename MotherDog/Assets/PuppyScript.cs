@@ -99,7 +99,7 @@ public class PuppyScript: MonoBehaviour, iDog
         if (state != State.Held)
         {
             Movement();
-            Debug.Log(state);
+            //Debug.Log(state);
 
             if (cooldown <= 0)
             {
