@@ -122,10 +122,7 @@ public class PuppyScript: MonoBehaviour, iDog
             }
         }
         
-        
-        
 
-        
     }
 
     private void OnTriggerEnter(Collider other)

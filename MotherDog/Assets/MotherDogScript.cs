@@ -10,19 +10,20 @@ public class MotherDogScript : MonoBehaviour, iDog
 
     private float cooldown = 0;
     private List<GameObject> pickup_list = new List<GameObject>();
-    private bool pickedup = false;
 
     [SerializeField] private GameObject puppyInMouth = null;
     //private Animator animator;
 
     Camera cam;
+    GameObject grabpoint;
 
     // Observer pattern
     public delegate void PuppyCheckDelegate(int x);
     public event PuppyCheckDelegate PuppyCheck;
 
-    public delegate void DogbedCallDelegate(GameObject puppy);
+    public delegate void DogbedCallDelegate(bool select, GameObject puppy);
     public event DogbedCallDelegate DogbedCall;
+    
 
     public enum State
     {
@@ -87,7 +88,7 @@ public class MotherDogScript : MonoBehaviour, iDog
             puppyInMouth = pickup_list[0];
             puppyInMouth.GetComponent<PuppyScript>().Pickup(true);
             puppyInMouth.transform.parent = transform;
-            puppyInMouth.transform.position = transform.position + transform.forward + new Vector3 (0, 0.5f, 0.5f);
+            puppyInMouth.transform.position = grabpoint.transform.position;
             state = State.Holding;
         }
         else if (pickup_list != null && enable == false)
@@ -115,25 +116,25 @@ public class MotherDogScript : MonoBehaviour, iDog
 
     private void Action()
     {
-        if (state == State.Empty)
+        if (state == State.Empty && DogbedCall == null)
         {
 
             Pickup(true);
         }
-        else if (state == State.Holding)
+        else if (state == State.Holding && DogbedCall == null)
         {
-            if (DogbedCall == null)
-            {
-                Pickup(false);
-            }
-            else
-            {
-                DogbedCall(puppyInMouth);
-                pickup_list.Clear();
-                state = State.Empty;
-            }
+            Pickup(false);
             
-            
+        }
+        else if (state == State.Holding && DogbedCall != null)
+        {
+            DogbedCall(true, puppyInMouth);
+            pickup_list.Clear();
+            state = State.Empty;
+        }
+        else if (state == State.Empty && DogbedCall != null)
+        {
+            DogbedCall(false, puppyInMouth);
         }
     }
     
@@ -141,6 +142,7 @@ public class MotherDogScript : MonoBehaviour, iDog
     void Start()
     {
         cam = GameObject.Find("Camera").GetComponent<Camera>();
+        grabpoint = transform.GetChild(1).gameObject;
         //animator = transform.GetChild(0).GetComponent<Animator>();
         state = State.Empty;
 
