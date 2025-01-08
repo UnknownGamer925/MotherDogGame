@@ -51,6 +51,13 @@ public class CanvasScript : MonoBehaviour
                 timerUI.GetComponent<Image>().color = Color.gray;
                 timerUI.GetComponent<Image>().fillAmount = 1;
                 break;
+            case 2:
+                textUI.gameObject.SetActive(true);
+                textUI.GetComponent<TextMeshProUGUI>().SetText("ROGUE CHILD: PUPPIES RELEASED");
+                textdelay = 3f;
+                timerUI.GetComponent<Image>().color = Color.gray;
+                timerUI.GetComponent<Image>().fillAmount = 1;
+                break;
 
         }
         

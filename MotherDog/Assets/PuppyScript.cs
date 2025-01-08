@@ -15,6 +15,7 @@ public class PuppyScript: MonoBehaviour, iDog
     [SerializeField] int maxDistance;
     Vector3 random_point;
     private float cooldown = 0;
+    private float response_time = 0;
 
 
     public enum State
@@ -50,9 +51,14 @@ public class PuppyScript: MonoBehaviour, iDog
         }
     }
 
-    public void Respond(int v) 
+    public void Respond() 
     {
-        Debug.Log("Puppy Code: " + v);
+        if (state != State.Held)
+        {
+            animator.SetBool("Barking", false);
+            animator.SetBool("Mother", true);
+            response_time = 1f;
+        }
     }
 
     public void Pickup(bool enable)
@@ -96,10 +102,10 @@ public class PuppyScript: MonoBehaviour, iDog
     // Update is called once per frame
     void Update()
     {
-        if (state != State.Held)
+        if (state != State.Held && response_time <= 0)
         {
             Movement();
-            //Debug.Log(state);
+            animator.SetBool("Mother", false);
 
             if (cooldown <= 0)
             {
@@ -112,7 +118,7 @@ public class PuppyScript: MonoBehaviour, iDog
                 else
                 {
                     animator.SetBool("Barking", true);
-                    cooldown = Random.Range(2, 5);
+                    cooldown = 1f;
                     state = State.Quiet;
                 }
             }
@@ -121,7 +127,10 @@ public class PuppyScript: MonoBehaviour, iDog
                 cooldown -= Time.deltaTime;
             }
         }
-        
+        else if (response_time > 0)
+        {
+            response_time -= Time.deltaTime;
+        }
 
     }
 

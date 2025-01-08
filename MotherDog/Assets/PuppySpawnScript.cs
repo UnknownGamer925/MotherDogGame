@@ -7,7 +7,7 @@ public class PuppySpawnScript : MonoBehaviour
 {
     [SerializeField] GameObject spawnEntity;
     [SerializeField] int total_pups = 10;
-    [SerializeField] int good_pups = 5;
+    [SerializeField] public static int good_pups = 5;
 
     private Vector3 ReturnPoint()
     {

@@ -8,17 +8,18 @@ public class MotherDogScript : MonoBehaviour, iDog
     [SerializeField] int MOVE_SPEED = 20;
     [SerializeField] int ROTATE_SPEED = 5;
 
-    private float cooldown = 0;
+    private bool process = false;
+    private Vector2 wait = new Vector2(0, 0);
     private List<GameObject> pickup_list = new List<GameObject>();
 
     [SerializeField] private GameObject puppyInMouth = null;
-    //private Animator animator;
+    private Animator animator;
 
     Camera cam;
     GameObject grabpoint;
 
     // Observer pattern
-    public delegate void PuppyCheckDelegate(int x);
+    public delegate void PuppyCheckDelegate();
     public event PuppyCheckDelegate PuppyCheck;
 
     public delegate void DogbedCallDelegate(bool select, GameObject puppy);
@@ -66,14 +67,10 @@ public class MotherDogScript : MonoBehaviour, iDog
 
     public void HandleComms(bool enable)
     {
-        if (PuppyCheck != null && cooldown <= 0)
+        if (PuppyCheck != null && wait.x <= 0)
         {
-            PuppyCheck(2);
-            cooldown = 5f;
-        }
-        else if (cooldown > 0)
-        {
-            Debug.Log("-----COOLDOWN ACTIVE-----");
+            PuppyCheck();
+            wait.x = 5f;
         }
         else
         {
@@ -85,7 +82,7 @@ public class MotherDogScript : MonoBehaviour, iDog
     {
         if (pickup_list != null && enable == true && pickup_list.Count > 0)
         {
-            puppyInMouth = pickup_list[0];
+            puppyInMouth = pickup_list[pickup_list.Count-1];
             puppyInMouth.GetComponent<PuppyScript>().Pickup(true);
             puppyInMouth.transform.parent = transform;
             puppyInMouth.transform.position = grabpoint.transform.position;
@@ -143,7 +140,7 @@ public class MotherDogScript : MonoBehaviour, iDog
     {
         cam = GameObject.Find("Camera").GetComponent<Camera>();
         grabpoint = transform.GetChild(1).gameObject;
-        //animator = transform.GetChild(0).GetComponent<Animator>();
+        animator = transform.GetChild(2).GetComponent<Animator>();
         state = State.Empty;
 
     }
@@ -153,21 +150,49 @@ public class MotherDogScript : MonoBehaviour, iDog
     {
         Movement();
 
-        if (cooldown > 0)
+        if (wait.y > 0)
         {
-            cooldown -= Time.deltaTime;
+            wait.y -= Time.deltaTime;
         }
         else
         {
-            cooldown = 0;
+            if (process == true)
+            {
+                animator.SetBool("Mother", false);
+                HandleComms(true);
+                process = false;
+            }
+            wait.y = 0;
+        }
+        
+        if (wait.x > 0)
+        {
+            wait.x -= Time.deltaTime;
+        }
+        else
+        {
+            wait.x = 0;
+
         }
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            HandleComms(true);
+            if (wait.x <= 0 && process == false)
+            {
+                animator.SetBool("Mother", true);
+                wait.y = 1f;
+                process = true;
+            }
+            
+            if (wait.x > 0)
+            {
+                Debug.Log("-----COOLDOWN ACTIVE-----");
+            }
+            
+            
         }
 
-        if (Input.GetKeyDown(KeyCode.E)) 
+        if (Input.GetMouseButtonDown(0)) 
         {
             Action();
         }

@@ -7,7 +7,7 @@ public class DogbedScript : MonoBehaviour
     MotherDogScript mother;
     private float puptimer = 0;
     public float maxtimer;
-    private bool empty = true;
+    private int empty = 0;
 
     public delegate void UIControlDelegate(float time, int control);
     public event UIControlDelegate UIControl;
@@ -33,7 +33,6 @@ public class DogbedScript : MonoBehaviour
         else if (!select)
         {
             Interact();
-            Debug.Log("WWWWWWWWWW");
         }
     }
 
@@ -41,9 +40,23 @@ public class DogbedScript : MonoBehaviour
     public void Interact(GameObject newpup)
     {
         newpup.transform.parent = transform;
-        newpup.transform.position = transform.position + new Vector3(0, 1, 0);
-        puptimer = maxtimer;
-        empty = false;
+        if (newpup.GetComponent<PuppyScript>().id == 0)
+        {
+            newpup.transform.position = transform.position + new Vector3(0, 1, 0);
+            puptimer = maxtimer;
+            empty++;
+        }
+        else
+        {
+            ReleaseDogs();
+            UIControl(0, 2);
+            puptimer = 0;
+        }
+
+        if (empty == PuppySpawnScript.good_pups)
+        {
+            Debug.Log("YOU WIN");
+        }
     }
     public void Interact()
     {
@@ -74,16 +87,16 @@ public class DogbedScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (empty == false)
+        if (empty != 0)
         {
             puptimer -= Time.deltaTime;
             UIControl(puptimer, 0);
         }
         
-        if (puptimer <= 0 && empty == false)
+        if (puptimer <= 0 && empty != 0)
         {
             UIControl(0, 1);
-            empty = true;
+            empty = 0;
             ReleaseDogs();
         }
     }
