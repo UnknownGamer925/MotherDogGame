@@ -7,7 +7,7 @@ public class PuppySpawnScript : MonoBehaviour
 {
     [SerializeField] GameObject spawnEntity;
     [SerializeField] int total_pups = 10;
-    [SerializeField] public static int good_pups = 5;
+    [SerializeField] public int good_pups = 5;
 
     private Vector3 ReturnPoint()
     {
@@ -32,7 +32,7 @@ public class PuppySpawnScript : MonoBehaviour
         int _id;
         for (int i = 0; i < total_pups; i++)
         {
-            if (i <= good_pups)
+            if (i < good_pups)
             {
                 _id = 0;
             }

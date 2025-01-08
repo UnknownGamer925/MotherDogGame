@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 public class GeneralManagerScript : MonoBehaviour
 {
@@ -43,7 +44,7 @@ public class GeneralManagerScript : MonoBehaviour
     {
         if (MinSecSubsec.x <= 0 && MinSecSubsec.y <= 0 && MinSecSubsec.z <= 0)
         {
-
+            SceneManager.LoadScene(3);
         }
         else
         {

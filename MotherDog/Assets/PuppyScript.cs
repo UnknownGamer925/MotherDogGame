@@ -10,7 +10,7 @@ public class PuppyScript: MonoBehaviour, iDog
 {
     public int id;
     private NavMeshAgent agent;
-    private MotherDogScript mother;
+    internal MotherDogScript mother;
     private Animator animator;
     [SerializeField] int maxDistance;
     Vector3 random_point;
@@ -66,6 +66,7 @@ public class PuppyScript: MonoBehaviour, iDog
         if (enable == true)
         {
             state = State.Held;
+            animator.SetBool("Mother", false);
             GetComponent<Rigidbody>().isKinematic = true;
             agent.updatePosition = false;
             animator.SetBool("Barking", false);
@@ -134,21 +135,7 @@ public class PuppyScript: MonoBehaviour, iDog
 
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Player" && mother != null)
-        {
-            HandleComms(true);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player" && mother != null)
-        {
-            HandleComms(false);
-        }
-    }
+    
 
     private void OnCollisionEnter(Collision collision)
     {

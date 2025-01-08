@@ -361,9 +361,11 @@
 "Assets/DogbedScript.cs"
 "Assets/GeneralManagerScript.cs"
 "Assets/MotherDogScript.cs"
+"Assets/ProximityScript.cs"
 "Assets/PuppyScript.cs"
 "Assets/PuppySpawnScript.cs"
 "Assets/Scenes/iDog_Interface.cs"
+"Assets/Scenes/MenuScript.cs"
 -langversion:9.0
 /deterministic
 /optimize+

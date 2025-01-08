@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DogbedScript : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class DogbedScript : MonoBehaviour
     private float puptimer = 0;
     public float maxtimer;
     private int empty = 0;
+    public GameObject spawner;
 
     public delegate void UIControlDelegate(float time, int control);
     public event UIControlDelegate UIControl;
@@ -53,9 +55,9 @@ public class DogbedScript : MonoBehaviour
             puptimer = 0;
         }
 
-        if (empty == PuppySpawnScript.good_pups)
+        if (empty >= spawner.GetComponent<PuppySpawnScript>().good_pups)
         {
-            Debug.Log("YOU WIN");
+            SceneManager.LoadScene(2);
         }
     }
     public void Interact()
@@ -75,6 +77,7 @@ public class DogbedScript : MonoBehaviour
                 child.transform.parent = GameObject.Find("PuppySpawner").transform;
             }
         }
+        empty = 0;
     }
     
     
@@ -96,7 +99,6 @@ public class DogbedScript : MonoBehaviour
         if (puptimer <= 0 && empty != 0)
         {
             UIControl(0, 1);
-            empty = 0;
             ReleaseDogs();
         }
     }

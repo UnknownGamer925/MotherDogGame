@@ -131,7 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 208647144}
-  - component: {fileID: 208647143}
+  - component: {fileID: 208647145}
   m_Layer: 0
   m_Name: PuppySpawner
   m_TagString: Untagged
@@ -139,20 +139,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &208647143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 208647142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ca6bfb15004d68499a77e3a9223b273, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnEntity: {fileID: 4479057715988834291, guid: 25df41816a6531a4b9e6965d4596d822, type: 3}
-  total_pups: 10
 --- !u!4 &208647144
 Transform:
   m_ObjectHideFlags: 0
@@ -168,6 +154,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &208647145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208647142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ca6bfb15004d68499a77e3a9223b273, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnEntity: {fileID: 4479057715988834291, guid: 25df41816a6531a4b9e6965d4596d822, type: 3}
+  total_pups: 10
+  good_pups: 5
 --- !u!1 &462607025
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,6 +1067,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MOVE_SPEED: 20
   ROTATE_SPEED: 5
+  pickup_list:
+  - {fileID: 0}
   puppyInMouth: {fileID: 0}
   state: 0
 --- !u!136 &963569561
@@ -1205,8 +1208,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: -0.42, z: 0.86}
+  m_Radius: 1.3429765
+  m_Center: {x: 0, y: -0.41999996, z: 1.2029766}
 --- !u!1 &1083669032
 GameObject:
   m_ObjectHideFlags: 0
@@ -2360,6 +2363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxtimer: 10
+  spawner: {fileID: 208647142}
 --- !u!114 &2054407849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2372,7 +2376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 551014e962de0ee40924eb9d33331926, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameTimer: 3
+  gameTimer: 2
   Textref: {fileID: 1248371022}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -10,7 +10,7 @@ public class MotherDogScript : MonoBehaviour, iDog
 
     private bool process = false;
     private Vector2 wait = new Vector2(0, 0);
-    private List<GameObject> pickup_list = new List<GameObject>();
+    [SerializeField] private List<GameObject> pickup_list = new List<GameObject>();
 
     [SerializeField] private GameObject puppyInMouth = null;
     private Animator animator;
@@ -100,7 +100,6 @@ public class MotherDogScript : MonoBehaviour, iDog
             {
                 puppyInMouth.transform.parent = null;
             }
-            pickup_list.Clear();
             state = State.Empty;
         }
         else
@@ -108,7 +107,7 @@ public class MotherDogScript : MonoBehaviour, iDog
             Debug.Log("No dogs in sight");
             state = State.Empty;
         }
-
+        
     }
 
     private void Action()
@@ -142,7 +141,7 @@ public class MotherDogScript : MonoBehaviour, iDog
         grabpoint = transform.GetChild(1).gameObject;
         animator = transform.GetChild(2).GetComponent<Animator>();
         state = State.Empty;
-
+        pickup_list.Clear();
     }
 
     // Update is called once per frame
@@ -211,7 +210,7 @@ public class MotherDogScript : MonoBehaviour, iDog
     {
         if (other.tag == "Puppy")
         {
-            pickup_list.Clear();
+            pickup_list.Remove(other.gameObject);
         }
     }
 }
