@@ -9,7 +9,7 @@ public class MotherDogScript : MonoBehaviour, iDog
     [SerializeField] int ROTATE_SPEED = 5;
 
     private bool process = false;
-    private Vector2 wait = new Vector2(0, 0);
+    public Vector2 wait = new Vector2(0, 0);
     [SerializeField] private List<GameObject> pickup_list = new List<GameObject>();
 
     [SerializeField] private GameObject puppyInMouth = null;
